@@ -1,10 +1,13 @@
 import * as XLSX from 'xlsx'
 
 const DATE_HEADER = /^(날짜|date|일자|방송일)$/i
+const START_HEADER = /^(시작|start)$/i
 
 export function isHeaderRow(cells: unknown[]): boolean {
-  const first = String(cells[0] ?? '').trim()
-  return DATE_HEADER.test(first)
+  const dateCol = String(cells[0] ?? '').trim()
+  if (DATE_HEADER.test(dateCol)) return true
+  const startCol = String(cells[2] ?? '').trim()
+  return START_HEADER.test(startCol)
 }
 
 export function cellToString(value: unknown): string {

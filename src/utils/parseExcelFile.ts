@@ -13,6 +13,23 @@ export type ParseExcelResult = {
   sheetCount: number
 }
 
+/** A=날짜, B=프로그램(채널명), C=시작, D=끝, E=광고 */
+const COL = {
+  DATE: 0,
+  PROGRAM: 1,
+  START: 2,
+  END: 3,
+  AD: 4,
+} as const
+
+const DATA_COLUMNS = [
+  COL.DATE,
+  COL.PROGRAM,
+  COL.START,
+  COL.END,
+  COL.AD,
+] as const
+
 function getDateCellValue(cell: XLSX.CellObject | undefined): unknown {
   if (!cell) return ''
 
@@ -57,6 +74,14 @@ function getCellValue(cell: XLSX.CellObject | undefined): unknown {
   return ''
 }
 
+function readCell(sheet: XLSX.WorkSheet, rowIndex: number, colIndex: number): unknown {
+  const address = XLSX.utils.encode_cell({ r: rowIndex, c: colIndex })
+  const cell = sheet[address]
+  if (colIndex === COL.DATE) return getDateCellValue(cell)
+  if (colIndex === COL.START || colIndex === COL.END) return getTimeCellValue(cell)
+  return getCellValue(cell)
+}
+
 function parseSheetRows(
   sheet: XLSX.WorkSheet,
   source: {
@@ -73,13 +98,7 @@ function parseSheetRows(
   let skippedHeader = false
 
   for (let rowIndex = range.s.r; rowIndex <= range.e.r; rowIndex++) {
-    const cells = [0, 1, 2, 3].map((colIndex) => {
-      const address = XLSX.utils.encode_cell({ r: rowIndex, c: colIndex })
-      const cell = sheet[address]
-      if (colIndex === 0) return getDateCellValue(cell)
-      if (colIndex === 2) return getTimeCellValue(cell)
-      return getCellValue(cell)
-    })
+    const cells = DATA_COLUMNS.map((colIndex) => readCell(sheet, rowIndex, colIndex))
 
     if (cells.every((cell) => cellToString(cell) === '')) continue
 
@@ -88,13 +107,16 @@ function parseSheetRows(
       continue
     }
 
-    const date = parseDateCell(cells[0])
-    const program = cellToString(cells[1])
-    const time = parseTimeCell(cells[2])
-    const advertisement = cellToString(cells[3])
+    const date = parseDateCell(cells[COL.DATE])
+    const programName = cellToString(cells[COL.PROGRAM])
+    const start = parseTimeCell(cells[COL.START])
+    const end = parseTimeCell(cells[COL.END])
+    const advertisement = cellToString(cells[COL.AD])
 
-    if (!date && !program && !time && !advertisement) continue
+    if (!date && !programName && !start && !end && !advertisement) continue
     if (!date) continue
+
+    const program = programName || '-'
 
     rows.push({
       id: crypto.randomUUID(),
@@ -103,9 +125,12 @@ function parseSheetRows(
       sourceSheetName: source.sourceSheetName,
       dateKey: date.dateKey,
       dateLabel: date.dateLabel,
-      program: program || '-',
-      timeLabel: time?.timeLabel ?? '-',
-      timeSort: time?.timeSort ?? Number.MAX_SAFE_INTEGER,
+      channel: source.sourceSheetName.trim() || '-',
+      programName: program,
+      startLabel: start?.timeLabel ?? '-',
+      startSort: start?.timeSort ?? Number.MAX_SAFE_INTEGER,
+      endLabel: end?.timeLabel ?? '-',
+      endSort: end?.timeSort ?? Number.MAX_SAFE_INTEGER,
       advertisement: advertisement || '-',
     })
   }

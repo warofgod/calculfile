@@ -5,9 +5,14 @@ export interface BroadcastRow {
   sourceSheetName: string
   dateKey: string
   dateLabel: string
-  program: string
-  timeLabel: string
-  timeSort: number
+  /** 시트명 → 채널 (예: mbc) */
+  channel: string
+  /** B열 → 프로그램명 (예: 우리아이가 변했어요) */
+  programName: string
+  startLabel: string
+  startSort: number
+  endLabel: string
+  endSort: number
   advertisement: string
 }
 

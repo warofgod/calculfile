@@ -7,16 +7,32 @@ function buildExportFilename(): string {
 }
 
 export function downloadOrganizedExcel(groups: DateGroup[]): void {
-  const rows: (string | number)[][] = [['날짜', '프로그램', '시간', '광고']]
+  const rows: (string | number)[][] = [
+    ['날짜', '시작', '끝', '채널', '프로그램', '광고'],
+  ]
 
   for (const group of groups) {
     for (const row of group.rows) {
-      rows.push([row.dateKey, row.program, row.timeLabel, row.advertisement])
+      rows.push([
+        row.dateKey,
+        row.startLabel,
+        row.endLabel,
+        row.channel,
+        row.programName,
+        row.advertisement,
+      ])
     }
   }
 
   const sheet = XLSX.utils.aoa_to_sheet(rows)
-  sheet['!cols'] = [{ wch: 22 }, { wch: 24 }, { wch: 10 }, { wch: 20 }]
+  sheet['!cols'] = [
+    { wch: 12 },
+    { wch: 10 },
+    { wch: 10 },
+    { wch: 12 },
+    { wch: 28 },
+    { wch: 20 },
+  ]
 
   const workbook = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(workbook, sheet, '통합정리')

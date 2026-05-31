@@ -12,10 +12,6 @@ type OrganizedViewProps = {
   fileCount: number
 }
 
-function formatSource(fileName: string, sheetName: string): string {
-  return `${fileName} · ${sheetName}`
-}
-
 export function OrganizedView({
   groups,
   loading,
@@ -68,8 +64,8 @@ export function OrganizedView({
       <div className="organized-view__body">
         {fileCount === 0 && (
           <p className="organized-view__empty">
-            A열 날짜, B열 프로그램, C열 시간, D열 광고 형식입니다. 파일 안의
-            모든 시트를 합쳐 정리합니다.
+            A열 날짜, B열 프로그램, C열 시작, D열 끝, E열 광고 형식입니다. 채널은
+            시트명, 프로그램은 B열 내용으로 표시합니다.
           </p>
         )}
 
@@ -86,24 +82,23 @@ export function OrganizedView({
               <table className="organized-view__table">
                 <thead>
                   <tr>
-                    <th scope="col">시간</th>
+                    <th scope="col">날짜</th>
+                    <th scope="col">시작</th>
+                    <th scope="col">끝</th>
+                    <th scope="col">채널</th>
                     <th scope="col">프로그램</th>
                     <th scope="col">광고</th>
-                    <th scope="col">출처</th>
                   </tr>
                 </thead>
                 <tbody>
                   {group.rows.map((row) => (
                     <tr key={row.id}>
-                      <td className="organized-view__time">{row.timeLabel}</td>
-                      <td>{row.program}</td>
+                      <td className="organized-view__date">{row.dateKey}</td>
+                      <td className="organized-view__time">{row.startLabel}</td>
+                      <td className="organized-view__time">{row.endLabel}</td>
+                      <td>{row.channel}</td>
+                      <td>{row.programName}</td>
                       <td>{row.advertisement}</td>
-                      <td
-                        className="organized-view__source"
-                        title={formatSource(row.sourceFileName, row.sourceSheetName)}
-                      >
-                        {formatSource(row.sourceFileName, row.sourceSheetName)}
-                      </td>
                     </tr>
                   ))}
                 </tbody>

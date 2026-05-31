@@ -20,8 +20,11 @@ export function organizeBroadcastRows(rows: BroadcastRow[]): DateGroup[] {
 
   for (const group of groups) {
     group.rows.sort((a, b) => {
-      if (a.timeSort !== b.timeSort) return a.timeSort - b.timeSort
-      return a.program.localeCompare(b.program, 'ko')
+      if (a.startSort !== b.startSort) return a.startSort - b.startSort
+      if (a.endSort !== b.endSort) return a.endSort - b.endSort
+      const byChannel = a.channel.localeCompare(b.channel, 'ko')
+      if (byChannel !== 0) return byChannel
+      return a.programName.localeCompare(b.programName, 'ko')
     })
   }
 
