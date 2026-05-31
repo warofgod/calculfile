@@ -8,6 +8,7 @@
 .app__header {
   padding: 48px 32px 32px;
   border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 @media (max-width: 1024px) {
@@ -26,18 +27,60 @@
   color: var(--text);
 }
 
-.app__main {
+.app__body {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.app__main .file-uploader {
-  margin: 32px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 1.1fr);
+  min-height: 0;
 }
 
 @media (max-width: 1024px) {
-  .app__main .file-uploader {
-    margin: 24px 20px;
+  .app__body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+}
+
+.app__left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-right: 1px solid var(--border);
+}
+
+@media (max-width: 1024px) {
+  .app__left {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+.app__left .file-uploader {
+  margin: 32px 32px 0;
+}
+
+@media (max-width: 1024px) {
+  .app__left .file-uploader {
+    margin: 24px 20px 0;
+  }
+}
+
+.app__left .file-list {
+  border-top: none;
+}
+
+@media (min-width: 1025px) {
+  .organized-view {
+    position: sticky;
+    top: 0;
+    max-height: calc(100svh - 180px);
+    align-self: start;
+  }
+}
+
+@media (max-width: 1024px) {
+  .organized-view {
+    min-height: 400px;
+    border-left: none;
   }
 }

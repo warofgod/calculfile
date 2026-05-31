@@ -87,7 +87,7 @@ export function FileUploader({ onFilesSelected, disabled }: FileUploaderProps) {
       </div>
       <p className="file-uploader__title">엑셀 파일을 여기에 놓거나 클릭하세요</p>
       <p className="file-uploader__hint">
-        .xlsx, .xls, .xlsm, .xlsb 형식만 업로드할 수 있습니다
+        .xlsx, .xls, .xlsm, .xlsb · 파일 내 모든 시트를 합쳐 정리합니다
       </p>
       {error && (
         <p className="file-uploader__error" role="alert">
