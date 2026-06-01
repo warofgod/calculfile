@@ -8,7 +8,7 @@ function buildExportFilename(): string {
 
 export function downloadOrganizedExcel(groups: DateGroup[]): void {
   const rows: (string | number)[][] = [
-    ['날짜', '시작', '끝', '채널', '프로그램', '광고'],
+    ['날짜', '시작', '끝', '채널', '프로그램', 'CM위치', '1일횟수', '시급', '초수'],
   ]
 
   for (const group of groups) {
@@ -19,7 +19,10 @@ export function downloadOrganizedExcel(groups: DateGroup[]): void {
         row.endLabel,
         row.channel,
         row.programName,
-        row.advertisement,
+        row.cmPosition,
+        row.dayCount,
+        row.hourlyWage,
+        row.seconds,
       ])
     }
   }
@@ -31,7 +34,10 @@ export function downloadOrganizedExcel(groups: DateGroup[]): void {
     { wch: 10 },
     { wch: 12 },
     { wch: 28 },
-    { wch: 20 },
+    { wch: 10 },
+    { wch: 8 },
+    { wch: 10 },
+    { wch: 8 },
   ]
 
   const workbook = XLSX.utils.book_new()

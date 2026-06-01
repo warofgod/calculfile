@@ -1,13 +1,52 @@
 import * as XLSX from 'xlsx'
 
 const DATE_HEADER = /^(날짜|date|일자|방송일)$/i
-const START_HEADER = /^(시작|start)$/i
+const LEGACY_START_HEADER = /^(시작|start)$/i
+const PROGRAM_HEADER = /^(프로그램|program|방송명|프로|프로그램명|방송)$/i
+const START_HEADER = /^(시작|start|시작시간|시작 시간)$/i
+
+export function isStartHeaderCell(value: unknown): boolean {
+  return START_HEADER.test(String(value ?? '').trim())
+}
 
 export function isHeaderRow(cells: unknown[]): boolean {
   const dateCol = String(cells[0] ?? '').trim()
   if (DATE_HEADER.test(dateCol)) return true
   const startCol = String(cells[2] ?? '').trim()
-  return START_HEADER.test(startCol)
+  return LEGACY_START_HEADER.test(startCol)
+}
+
+export function isMatrixHeaderRow(firstCell: unknown): boolean {
+  return PROGRAM_HEADER.test(String(firstCell ?? '').trim())
+}
+
+const GRAND_TOTAL_PATTERN = /grand\s*total/i
+
+export function isGrandTotalProgram(programName: string): boolean {
+  return GRAND_TOTAL_PATTERN.test(programName.trim())
+}
+
+/** H열 이후 일자 셀 숫자 (1, 2, …) → 1일횟수 */
+export function parseScheduleCount(value: unknown): number | null {
+  if (value == null || value === '') return null
+  if (typeof value === 'number') {
+    const n = Math.round(value)
+    if (Number.isFinite(n) && n >= 1) return n
+    return null
+  }
+  const text = String(value).trim().replace(/,/g, '')
+  if (!text) return null
+  const n = Number(text)
+  if (Number.isFinite(n) && n >= 1) return Math.round(n)
+  return null
+}
+
+export function isScheduledMarker(value: unknown): boolean {
+  return parseScheduleCount(value) != null
+}
+
+export function buildDateFromParts(year: number, month: number, day: number) {
+  return formatDateParts(year, month, day)
 }
 
 export function cellToString(value: unknown): string {

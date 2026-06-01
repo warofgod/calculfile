@@ -5,15 +5,24 @@ export interface BroadcastRow {
   sourceSheetName: string
   dateKey: string
   dateLabel: string
-  /** 시트명 → 채널 (예: mbc) */
+  /** 시트명 → 채널 */
   channel: string
-  /** B열 → 프로그램명 (예: 우리아이가 변했어요) */
+  /** A열 프로그램 */
   programName: string
   startLabel: string
   startSort: number
   endLabel: string
   endSort: number
-  advertisement: string
+  /** F열 CM위치 */
+  cmPosition: string
+  /** H열 이후 해당 일자 셀 숫자 (1일횟수, 보통 1·2 등) */
+  dayCount: number
+  /** G열 월횟수 (원본) */
+  monthlyCount: string
+  /** D열 시급 */
+  hourlyWage: string
+  /** E열 초수 */
+  seconds: string
 }
 
 export interface DateGroup {
