@@ -26,9 +26,18 @@ const DEFAULT_COL = {
   CM: 5,
   MONTHLY_COUNT: 6,
   FIRST_DATE: 7,
-} as const
+}
 
-type ColumnLayout = typeof DEFAULT_COL
+type ColumnLayout = {
+  PROGRAM: number
+  START: number
+  END: number
+  HOURLY_WAGE: number
+  SECONDS: number
+  CM: number
+  MONTHLY_COUNT: number
+  FIRST_DATE: number
+}
 
 function getTimeCellValue(cell: XLSX.CellObject | undefined): unknown {
   if (!cell) return ''
