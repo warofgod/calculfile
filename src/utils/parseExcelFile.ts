@@ -4,7 +4,7 @@ import { parseSheetPeriod } from './parseSheetPeriod'
 import {
   buildDateFromParts,
   cellToString,
-  isGrandTotalProgram,
+  isExcludedProgram,
   isMatrixHeaderRow,
   isStartHeaderCell,
   parseScheduleCount,
@@ -196,7 +196,7 @@ function parseSheetRows(
 
     if (!programName) continue
     if (isMatrixHeaderRow(programName) || isStartHeaderCell(programName)) continue
-    if (isGrandTotalProgram(programName)) continue
+    if (isExcludedProgram(programName)) continue
 
     for (let col = cols.FIRST_DATE; col <= range.e.c; col++) {
       const address = XLSX.utils.encode_cell({ r: rowIndex, c: col })

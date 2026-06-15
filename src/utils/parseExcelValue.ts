@@ -20,10 +20,9 @@ export function isMatrixHeaderRow(firstCell: unknown): boolean {
   return PROGRAM_HEADER.test(String(firstCell ?? '').trim())
 }
 
-const GRAND_TOTAL_PATTERN = /grand\s*total/i
-
-export function isGrandTotalProgram(programName: string): boolean {
-  return GRAND_TOTAL_PATTERN.test(programName.trim())
+export function isExcludedProgram(programName: string): boolean {
+  const compact = programName.trim().toLowerCase().replace(/\s+/g, '')
+  return compact.includes('grandtotal') || compact.includes('subtotal')
 }
 
 /** H열 이후 일자 셀 숫자 (1, 2, …) → 1일횟수 */
